@@ -4,10 +4,14 @@ import { usePathname } from "next/navigation";
 
 export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isStandaloneRoute = pathname?.startsWith("/crm") || pathname?.startsWith("/login");
+  // Landing page, CRM, Login, and Simulators have their own standalone layouts
+  const isStandaloneRoute =
+    pathname === "/" ||
+    pathname?.startsWith("/crm") ||
+    pathname?.startsWith("/login") ||
+    pathname?.startsWith("/simulador");
 
   if (isStandaloneRoute) {
-    // CRM and Login have their own standalone layouts
     return <>{children}</>;
   }
 
