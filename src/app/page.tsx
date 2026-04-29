@@ -116,7 +116,7 @@ export default function LandingPage() {
                     <span className="value-display"><span className="value-amount">R$400.000</span></span>
                     <button className="value-btn plus-btn" type="button">+</button>
                   </div>
-                  <Link href="/simulador" className="btn-primary btn-large" id="simulatorLink">Simular agora</Link>
+                  <a href="/simulador" className="btn-primary btn-large" id="simulatorLink">Simular agora</a>
                 </div>
               </div>
             </div>
