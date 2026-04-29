@@ -14,12 +14,9 @@ export const metadata: Metadata = {
   publisher: "Lumio Consórcios",
   metadataBase: new URL("https://lumioconsorcios.com.br"),
   icons: {
-    icon: [
-      { url: "/favicon.png", type: "image/png" },
-      { url: "/img/Lumio-icon.png", type: "image/png" },
-    ],
+    icon: "/favicon.ico",
     apple: "/img/Lumio-icon.png",
-    shortcut: "/favicon.png",
+    shortcut: "/favicon.ico",
   },
   alternates: {
     canonical: "/",
