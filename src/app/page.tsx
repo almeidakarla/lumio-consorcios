@@ -288,11 +288,11 @@ export default function LandingPage() {
                     <tr><th>Crédito</th><th className="flex-col">Super Flex</th><th className="integral-col">Integral</th></tr>
                   </thead>
                   <tbody>
-                    <tr><td>R$ 120.000</td><td className="flex-col text-primary">R$ 479,93</td><td className="integral-col">R$ 750,29</td></tr>
-                    <tr><td>R$ 200.000</td><td className="flex-col text-primary">R$ 799,88</td><td className="integral-col">R$ 1.250,48</td></tr>
-                    <tr><td>R$ 300.000</td><td className="flex-col text-primary">R$ 1.199,82</td><td className="integral-col">R$ 1.875,72</td></tr>
-                    <tr><td>R$ 400.000</td><td className="flex-col text-primary">R$ 1.599,76</td><td className="integral-col">R$ 2.500,96</td></tr>
-                    <tr><td>R$ 600.000</td><td className="flex-col text-primary">R$ 2.399,64</td><td className="integral-col">R$ 3.751,44</td></tr>
+                    <tr><td>R$ 120.000</td><td className="flex-col text-primary">R$ 439,09</td><td className="integral-col">R$ 627,27</td></tr>
+                    <tr><td>R$ 200.000</td><td className="flex-col text-primary">R$ 731,82</td><td className="integral-col">R$ 1.045,45</td></tr>
+                    <tr><td>R$ 300.000</td><td className="flex-col text-primary">R$ 1.097,73</td><td className="integral-col">R$ 1.568,18</td></tr>
+                    <tr><td>R$ 400.000</td><td className="flex-col text-primary">R$ 1.463,64</td><td className="integral-col">R$ 2.090,91</td></tr>
+                    <tr><td>R$ 600.000</td><td className="flex-col text-primary">R$ 2.195,45</td><td className="integral-col">R$ 3.136,36</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -309,10 +309,10 @@ export default function LandingPage() {
                     <tr><th>Crédito</th><th className="flex-col">Super Flex</th><th className="integral-col">Integral</th></tr>
                   </thead>
                   <tbody>
-                    <tr><td>R$ 240.000</td><td className="flex-col text-primary">R$ 1.114,08</td><td className="integral-col">R$ 1.780,56</td></tr>
-                    <tr><td>R$ 300.000</td><td className="flex-col text-primary">R$ 1.392,60</td><td className="integral-col">R$ 2.225,70</td></tr>
-                    <tr><td>R$ 600.000</td><td className="flex-col text-primary">R$ 2.785,20</td><td className="integral-col">R$ 4.451,40</td></tr>
-                    <tr><td>R$ 1.000.000</td><td className="flex-col text-primary">R$ 4.642,00</td><td className="integral-col">R$ 7.419,00</td></tr>
+                    <tr><td>R$ 240.000</td><td className="flex-col text-primary">R$ 1.073,33</td><td className="integral-col">R$ 1.533,33</td></tr>
+                    <tr><td>R$ 300.000</td><td className="flex-col text-primary">R$ 1.341,67</td><td className="integral-col">R$ 1.916,67</td></tr>
+                    <tr><td>R$ 600.000</td><td className="flex-col text-primary">R$ 2.683,33</td><td className="integral-col">R$ 3.833,33</td></tr>
+                    <tr><td>R$ 1.000.000</td><td className="flex-col text-primary">R$ 4.472,22</td><td className="integral-col">R$ 6.388,89</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -329,9 +329,9 @@ export default function LandingPage() {
                     <tr><th>Crédito</th><th className="flex-col">Super Flex</th><th className="integral-col">Integral</th></tr>
                   </thead>
                   <tbody>
-                    <tr><td>R$ 250.000</td><td className="flex-col text-primary">R$ 1.274,05</td><td className="integral-col">R$ 2.055,30</td></tr>
-                    <tr><td>R$ 500.000</td><td className="flex-col text-primary">R$ 2.548,10</td><td className="integral-col">R$ 4.110,60</td></tr>
-                    <tr><td>R$ 1.000.000</td><td className="flex-col text-primary">R$ 5.096,20</td><td className="integral-col">R$ 8.221,20</td></tr>
+                    <tr><td>R$ 250.000</td><td className="flex-col text-primary">R$ 1.257,81</td><td className="integral-col">R$ 1.796,88</td></tr>
+                    <tr><td>R$ 500.000</td><td className="flex-col text-primary">R$ 2.515,63</td><td className="integral-col">R$ 3.593,75</td></tr>
+                    <tr><td>R$ 1.000.000</td><td className="flex-col text-primary">R$ 5.031,25</td><td className="integral-col">R$ 7.187,50</td></tr>
                   </tbody>
                 </table>
               </div>
