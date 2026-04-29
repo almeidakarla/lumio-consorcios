@@ -48,8 +48,8 @@ export default function LandingPage() {
           <div className="container hero-container">
             <div className="hero-content">
               <p className="hero-tag">Consórcio imobiliário ou veicular</p>
-              <h1 className="hero-title">Conquiste seu imóvel ou carro, <span className="text-primary">sem juros</span></h1>
-              <p className="hero-subtitle">Taxa de administração a partir de 13% · Parcelas desde R$ 400/mês · Credenciado ao Itaú</p>
+              <h1 className="hero-title">Conquiste o seu carro ou imóvel dos sonhos, sem juros e com planejamento</h1>
+              <p className="hero-subtitle">Taxa de administração a partir de 12%, com parcelas a partir de R$400,00.</p>
             </div>
           </div>
           <a href="#como-funciona" className="scroll-down">
@@ -129,7 +129,7 @@ export default function LandingPage() {
             <div className="options-grid">
               <div className="option-card">
                 <div className="option-image">
-                  <img src="/img/juiz-de-fora.webp" alt="Consórcio de Imóvel" />
+                  <img src="/img/lumio-card-house-wide.webp" alt="Consórcio de Imóvel" />
                 </div>
                 <h3>Consórcio de Imóvel</h3>
                 <p>Planejamento inteligente para escolher o imóvel que deseja e que mais combina com você, seja uma casa, um terreno, um apartamento ou até uma reforma.</p>
@@ -138,7 +138,7 @@ export default function LandingPage() {
               </div>
               <div className="option-card">
                 <div className="option-image">
-                  <img src="/img/juiz-de-fora.webp" alt="Consórcio de Carro" />
+                  <img src="/img/lumio-card-car-wide.webp" alt="Consórcio de Carro" />
                 </div>
                 <h3>Consórcio de Carro</h3>
                 <p>Do primeiro carro à sua próxima conquista: de forma simples, você escolhe o automóvel certo no seu tempo.</p>
@@ -230,7 +230,7 @@ export default function LandingPage() {
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                 </div>
                 <div>
-                  <h3>Compra veicular</h3>
+                  <h3>Compra de Carro</h3>
                   <p>Quer trocar de carro ou comprar o primeiro</p>
                 </div>
               </div>
