@@ -2,16 +2,18 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-    --primary:#4a9b8f;
-    --primary-light:#5fb3a6;
-    --bg:#161616;
-    --bg-alt:#161616;
-    --bg-card:#151515;
-    --text:#fff;
+    /* Brand Colors */
+    --primary:#00A884;
+    --primary-dark:#007968;
+    --primary-light:#00A884;
+    --bg:#0D1113;
+    --bg-alt:#0D1113;
+    --bg-card:#131719;
+    --text:#FFFFFF;
     --text-secondary:#d4d4d4;
-    --text-muted:#999;
-    --border:#252525;
-    --border-light:#333;
+    --text-muted:#687280;
+    --border:#1f2428;
+    --border-light:#2a3038;
     --red:#e07a6b;
     --orange:#f0a89d;
     --font:'Plus Jakarta Sans',-apple-system,sans-serif
@@ -88,7 +90,7 @@ button{border:none;background:none;cursor:pointer;font-family:inherit;color:inhe
 .btn-option-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;background:var(--primary);color:#fff;font-size:14px;font-weight:600;border-radius:99px;text-align:center;transition:all .2s}
 .btn-option-primary:hover{background:var(--primary-light);transform:translateY(-2px)}
 .btn-option-outline{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;background:transparent;color:var(--primary);font-size:14px;font-weight:600;border:1px solid var(--primary);border-radius:99px;text-align:center;transition:all .2s}
-.btn-option-outline:hover{background:rgba(74,155,143,.15)}
+.btn-option-outline:hover{background:rgba(0,168,132,.15)}
 .btn-option-outline.active{background:var(--primary);color:#fff}
 .option-card .btn-option-primary,.option-card .btn-option-outline{display:block;width:100%;padding:16px 24px;font-size:15px}
 .option-card .btn-option-primary{margin-bottom:12px}
