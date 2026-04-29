@@ -6,24 +6,24 @@ import Image from "next/image";
 import Link from "next/link";
 import "./simulador.css";
 
-// Consorcio type configurations
+// Consorcio type configurations (values match pricing tables)
 const configs = {
   imovel: {
-    values: [200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000, 1100000, 1200000, 1300000, 1400000, 1500000, 1600000, 1700000, 1800000, 1900000, 2000000],
-    defaultIndex: 2,
+    values: [120000, 200000, 240000, 250000, 300000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+    defaultIndex: 5,
     label: "Imóvel",
     badgeLabel: "Imobiliário",
-    range: "de R$ 200.000 até R$ 2.000.000",
-    planMin: 150000,
+    range: "de R$ 120.000 até R$ 1.000.000",
+    planMin: 120000,
     planStep: 50000,
   },
   veiculo: {
-    values: [80000, 100000, 120000, 140000, 160000, 180000, 200000, 250000, 300000, 400000],
+    values: [50000, 80000, 100000, 120000, 150000, 200000, 250000, 300000, 400000],
     defaultIndex: 3,
     label: "Veículo",
     badgeLabel: "Veicular",
-    range: "de R$ 80.000 até R$ 400.000",
-    planMin: 80000,
+    range: "de R$ 50.000 até R$ 400.000",
+    planMin: 50000,
     planStep: 20000,
   },
 } as const;

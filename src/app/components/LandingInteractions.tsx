@@ -15,13 +15,13 @@ export function LandingInteractions() {
     const fmt = (n: number) => "R$ " + n.toLocaleString("pt-BR");
     const fmtCredit = (n: number) => "R$" + (n * 1000).toLocaleString("pt-BR");
 
-    // Value selector with type support
-    const imovelValues = [200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000];
-    const veiculoValues = [80, 100, 120, 140, 160, 180, 200, 250, 300, 400];
+    // Value selector with type support (values match pricing tables)
+    const imovelValues = [120, 200, 240, 250, 300, 400, 500, 600, 700, 800, 900, 1000];
+    const veiculoValues = [50, 80, 100, 120, 150, 200, 250, 300, 400];
 
     let currentType = "imovel";
     let currentValues = imovelValues;
-    let currentIndex = 2; // Start at 400 for imovel
+    let currentIndex = 5; // Start at 400 for imovel
 
     const display = document.querySelector(".value-amount");
     const simLink = document.getElementById("simulatorLink") as HTMLAnchorElement | null;
@@ -48,10 +48,10 @@ export function LandingInteractions() {
 
         if (currentType === "imovel") {
           currentValues = imovelValues;
-          currentIndex = 2; // Default to 400
+          currentIndex = 5; // Default to 400
         } else {
           currentValues = veiculoValues;
-          currentIndex = 3; // Default to 140
+          currentIndex = 3; // Default to 120
         }
 
         // Show value section
