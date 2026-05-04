@@ -165,9 +165,9 @@ export default function LandingPage() {
               <div className="chart-row"><span>Financiamento</span><div className="bar"><div className="bar-fill financing"></div></div><span id="financingAmount">R$ 572.885</span><span className="badge red">76.4%</span></div>
               <div className="chart-row"><span>Outros consórcios</span><div className="bar"><div className="bar-fill others"></div></div><span id="othersAmount">R$ 236.250</span><span className="badge orange">31.5%</span></div>
               <div className="chart-row highlight"><span>Lumio</span><div className="bar"><div className="bar-fill lumio"></div></div><span id="lumioAmount">R$ 112.500</span><span className="badge green">15%</span></div>
-            </div>
-            <div className="chart-download">
-              <ComparisonPdfButton />
+              <div className="chart-download">
+                <ComparisonPdfButton />
+              </div>
             </div>
           </div>
         </section>
