@@ -698,6 +698,148 @@ export default function SimuladorLancePage() {
     URL.revokeObjectURL(url);
   };
 
+  const handleDownloadComparisonPDF = async () => {
+    const { jsPDF } = await import("jspdf");
+    const doc = new jsPDF({ orientation: "landscape" });
+    const pageWidth = doc.internal.pageSize.getWidth();
+
+    // Title
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text("Comparativo Consórcio x Financiamento", pageWidth / 2, 15, { align: "center" });
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Valor do Imóvel: ${formatCurrency(amortInputs.valorEmprestimo)} | Taxa Rendimento: ${compInputs.taxaRendimento}% a.a.`, pageWidth / 2, 22, { align: "center" });
+
+    // Table settings
+    const startY = 30;
+    const rowHeight = 7;
+    const colWidths = [15, 25, 35, 35, 35, 45, 45];
+    const totalWidth = colWidths.reduce((a, b) => a + b, 0);
+    const startX = (pageWidth - totalWidth) / 2;
+
+    // Header
+    doc.setFillColor(30, 64, 175);
+    doc.rect(startX, startY, totalWidth, rowHeight, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8);
+
+    const headers = ["Mês", "Período", "Consórcio", "Financiamento", "Economia/Perda", "Economia Acumulada", "Saldo Consórcio"];
+    let xPos = startX;
+    headers.forEach((header, i) => {
+      doc.text(header, xPos + colWidths[i] / 2, startY + 5, { align: "center" });
+      xPos += colWidths[i];
+    });
+
+    // Data rows
+    doc.setFont("helvetica", "normal");
+    const maxRowsPerPage = 25;
+    let currentY = startY + rowHeight;
+    let rowCount = 0;
+
+    comparisonData.forEach((row, index) => {
+      if (rowCount >= maxRowsPerPage) {
+        doc.addPage();
+        currentY = 20;
+        rowCount = 0;
+
+        // Reprint header on new page
+        doc.setFillColor(30, 64, 175);
+        doc.rect(startX, currentY, totalWidth, rowHeight, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        xPos = startX;
+        headers.forEach((header, i) => {
+          doc.text(header, xPos + colWidths[i] / 2, currentY + 5, { align: "center" });
+          xPos += colWidths[i];
+        });
+        currentY += rowHeight;
+        doc.setFont("helvetica", "normal");
+      }
+
+      // Alternate row colors
+      if (index % 2 === 0) {
+        doc.setFillColor(249, 250, 251);
+        doc.rect(startX, currentY, totalWidth, rowHeight, "F");
+      }
+
+      // Draw borders
+      doc.setDrawColor(220, 220, 220);
+      let cellX = startX;
+      colWidths.forEach((width) => {
+        doc.rect(cellX, currentY, width, rowHeight, "S");
+        cellX += width;
+      });
+
+      // Cell values
+      const values = [
+        row.mes.toString(),
+        row.periodo,
+        formatCurrency(row.consorcio),
+        formatCurrency(row.financiamento),
+        formatCurrency(row.economia),
+        formatCurrency(row.economiaAcumulada),
+        formatCurrency(row.saldoConsorcio),
+      ];
+
+      xPos = startX;
+      values.forEach((value, i) => {
+        // Color coding for economia columns
+        if (i === 4) {
+          doc.setTextColor(row.economia >= 0 ? 22 : 220, row.economia >= 0 ? 163 : 38, row.economia >= 0 ? 74 : 38);
+        } else if (i === 5) {
+          doc.setTextColor(row.economiaAcumulada >= 0 ? 22 : 220, row.economiaAcumulada >= 0 ? 163 : 38, row.economiaAcumulada >= 0 ? 74 : 38);
+        } else {
+          doc.setTextColor(60, 60, 60);
+        }
+        doc.text(value, xPos + colWidths[i] / 2, currentY + 5, { align: "center" });
+        xPos += colWidths[i];
+      });
+
+      currentY += rowHeight;
+      rowCount++;
+    });
+
+    // Total row
+    doc.setFillColor(220, 252, 231);
+    doc.rect(startX, currentY, totalWidth, rowHeight, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(0, 0, 0);
+
+    const totalValues = [
+      "TOTAL",
+      "",
+      formatCurrency(totals.consorcio),
+      formatCurrency(totals.financiamento),
+      formatCurrency(totals.economia),
+      formatCurrency(comparisonData[comparisonData.length - 1]?.economiaAcumulada || 0),
+      formatCurrency(comparisonData[comparisonData.length - 1]?.saldoConsorcio || 0),
+    ];
+
+    xPos = startX;
+    totalValues.forEach((value, i) => {
+      if (i === 4 || i === 5) {
+        const val = i === 4 ? totals.economia : (comparisonData[comparisonData.length - 1]?.economiaAcumulada || 0);
+        doc.setTextColor(val >= 0 ? 22 : 220, val >= 0 ? 163 : 38, val >= 0 ? 74 : 38);
+      } else {
+        doc.setTextColor(0, 0, 0);
+      }
+      doc.text(value, xPos + colWidths[i] / 2, currentY + 5, { align: "center" });
+      xPos += colWidths[i];
+    });
+
+    // Footer
+    doc.setFontSize(8);
+    doc.setTextColor(150, 150, 150);
+    doc.setFont("helvetica", "normal");
+    const footerY = doc.internal.pageSize.getHeight() - 10;
+    doc.text("Lumio Consórcios - Credenciado ao Itaú | www.lumioconsorcios.com.br", pageWidth / 2, footerY, { align: "center" });
+
+    doc.save(`comparativo-consorcio-financiamento-${new Date().toISOString().split("T")[0]}.pdf`);
+  };
+
   // Fetch SELIC rate from BCB (Banco Central do Brasil) API
   useEffect(() => {
     const fetchSelicRate = async () => {
@@ -1296,14 +1438,28 @@ export default function SimuladorLancePage() {
             <div className="comparison-card">
               <div className="comparison-table-header">
                 <h2 className="comparison-card-title">Parcela Mês a Mês</h2>
-                {comparisonData.length > 24 && (
+                <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
                   <button
                     className="btn-toggle-rows"
-                    onClick={() => setShowAllCompRows(!showAllCompRows)}
+                    onClick={handleDownloadComparisonPDF}
+                    style={{ display: "flex", alignItems: "center", gap: "6px" }}
                   >
-                    {showAllCompRows ? "Ver Menos" : `Ver Todas (${comparisonData.length} meses)`}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Baixar PDF
                   </button>
-                )}
+                  {comparisonData.length > 24 && (
+                    <button
+                      className="btn-toggle-rows"
+                      onClick={() => setShowAllCompRows(!showAllCompRows)}
+                    >
+                      {showAllCompRows ? "Ver Menos" : `Ver Todas (${comparisonData.length} meses)`}
+                    </button>
+                  )}
+                </div>
               </div>
               <div className="comparison-table-wrapper">
                 <table className="comparison-table">
