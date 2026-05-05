@@ -703,13 +703,31 @@ export default function SimuladorLancePage() {
     const doc = new jsPDF({ orientation: "landscape" });
     const pageWidth = doc.internal.pageSize.getWidth();
 
+    // Lumio brand colors
+    const colors = {
+      primary: [0, 168, 132],      // #00A884
+      primaryDark: [0, 121, 104],  // #007968
+      bgDark: [13, 17, 19],        // #0D1113
+      bgCard: [19, 23, 25],        // #131719
+      text: [255, 255, 255],
+      textMuted: [104, 114, 128],  // #687280
+      red: [224, 122, 107],        // #e07a6b
+      orange: [240, 168, 157],     // #f0a89d
+    };
+
+    // Dark background
+    doc.setFillColor(colors.bgDark[0], colors.bgDark[1], colors.bgDark[2]);
+    doc.rect(0, 0, pageWidth, doc.internal.pageSize.getHeight(), "F");
+
     // Title
-    doc.setFontSize(16);
+    doc.setFontSize(18);
     doc.setFont("helvetica", "bold");
+    doc.setTextColor(colors.primary[0], colors.primary[1], colors.primary[2]);
     doc.text("Comparativo Consórcio x Financiamento", pageWidth / 2, 15, { align: "center" });
 
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
+    doc.setTextColor(colors.textMuted[0], colors.textMuted[1], colors.textMuted[2]);
     doc.text(`Valor do Imóvel: ${formatCurrency(amortInputs.valorEmprestimo)} | Taxa Rendimento: ${compInputs.taxaRendimento}% a.a.`, pageWidth / 2, 22, { align: "center" });
 
     // Table settings
@@ -719,8 +737,8 @@ export default function SimuladorLancePage() {
     const totalWidth = colWidths.reduce((a, b) => a + b, 0);
     const startX = (pageWidth - totalWidth) / 2;
 
-    // Header
-    doc.setFillColor(30, 64, 175);
+    // Header row - primary color
+    doc.setFillColor(colors.primary[0], colors.primary[1], colors.primary[2]);
     doc.rect(startX, startY, totalWidth, rowHeight, "F");
     doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
@@ -739,34 +757,42 @@ export default function SimuladorLancePage() {
     let currentY = startY + rowHeight;
     let rowCount = 0;
 
+    const printHeader = (y: number) => {
+      // Dark background for new page
+      doc.setFillColor(colors.bgDark[0], colors.bgDark[1], colors.bgDark[2]);
+      doc.rect(0, 0, pageWidth, doc.internal.pageSize.getHeight(), "F");
+
+      doc.setFillColor(colors.primary[0], colors.primary[1], colors.primary[2]);
+      doc.rect(startX, y, totalWidth, rowHeight, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFont("helvetica", "bold");
+      let x = startX;
+      headers.forEach((header, i) => {
+        doc.text(header, x + colWidths[i] / 2, y + 5, { align: "center" });
+        x += colWidths[i];
+      });
+    };
+
     comparisonData.forEach((row, index) => {
       if (rowCount >= maxRowsPerPage) {
         doc.addPage();
         currentY = 20;
         rowCount = 0;
-
-        // Reprint header on new page
-        doc.setFillColor(30, 64, 175);
-        doc.rect(startX, currentY, totalWidth, rowHeight, "F");
-        doc.setTextColor(255, 255, 255);
-        doc.setFont("helvetica", "bold");
-        xPos = startX;
-        headers.forEach((header, i) => {
-          doc.text(header, xPos + colWidths[i] / 2, currentY + 5, { align: "center" });
-          xPos += colWidths[i];
-        });
+        printHeader(currentY);
         currentY += rowHeight;
         doc.setFont("helvetica", "normal");
       }
 
-      // Alternate row colors
+      // Alternate row colors - dark theme
       if (index % 2 === 0) {
-        doc.setFillColor(249, 250, 251);
-        doc.rect(startX, currentY, totalWidth, rowHeight, "F");
+        doc.setFillColor(colors.bgCard[0], colors.bgCard[1], colors.bgCard[2]);
+      } else {
+        doc.setFillColor(colors.bgDark[0], colors.bgDark[1], colors.bgDark[2]);
       }
+      doc.rect(startX, currentY, totalWidth, rowHeight, "F");
 
       // Draw borders
-      doc.setDrawColor(220, 220, 220);
+      doc.setDrawColor(40, 50, 60);
       let cellX = startX;
       colWidths.forEach((width) => {
         doc.rect(cellX, currentY, width, rowHeight, "S");
@@ -786,13 +812,21 @@ export default function SimuladorLancePage() {
 
       xPos = startX;
       values.forEach((value, i) => {
-        // Color coding for economia columns
+        // Color coding
         if (i === 4) {
-          doc.setTextColor(row.economia >= 0 ? 22 : 220, row.economia >= 0 ? 163 : 38, row.economia >= 0 ? 74 : 38);
+          if (row.economia >= 0) {
+            doc.setTextColor(colors.primary[0], colors.primary[1], colors.primary[2]);
+          } else {
+            doc.setTextColor(colors.red[0], colors.red[1], colors.red[2]);
+          }
         } else if (i === 5) {
-          doc.setTextColor(row.economiaAcumulada >= 0 ? 22 : 220, row.economiaAcumulada >= 0 ? 163 : 38, row.economiaAcumulada >= 0 ? 74 : 38);
+          if (row.economiaAcumulada >= 0) {
+            doc.setTextColor(colors.primary[0], colors.primary[1], colors.primary[2]);
+          } else {
+            doc.setTextColor(colors.red[0], colors.red[1], colors.red[2]);
+          }
         } else {
-          doc.setTextColor(60, 60, 60);
+          doc.setTextColor(colors.text[0], colors.text[1], colors.text[2]);
         }
         doc.text(value, xPos + colWidths[i] / 2, currentY + 5, { align: "center" });
         xPos += colWidths[i];
@@ -802,11 +836,11 @@ export default function SimuladorLancePage() {
       rowCount++;
     });
 
-    // Total row
-    doc.setFillColor(220, 252, 231);
+    // Total row - highlighted with primary color background
+    doc.setFillColor(colors.primaryDark[0], colors.primaryDark[1], colors.primaryDark[2]);
     doc.rect(startX, currentY, totalWidth, rowHeight, "F");
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(0, 0, 0);
+    doc.setTextColor(255, 255, 255);
 
     const totalValues = [
       "TOTAL",
@@ -820,19 +854,13 @@ export default function SimuladorLancePage() {
 
     xPos = startX;
     totalValues.forEach((value, i) => {
-      if (i === 4 || i === 5) {
-        const val = i === 4 ? totals.economia : (comparisonData[comparisonData.length - 1]?.economiaAcumulada || 0);
-        doc.setTextColor(val >= 0 ? 22 : 220, val >= 0 ? 163 : 38, val >= 0 ? 74 : 38);
-      } else {
-        doc.setTextColor(0, 0, 0);
-      }
       doc.text(value, xPos + colWidths[i] / 2, currentY + 5, { align: "center" });
       xPos += colWidths[i];
     });
 
     // Footer
     doc.setFontSize(8);
-    doc.setTextColor(150, 150, 150);
+    doc.setTextColor(colors.textMuted[0], colors.textMuted[1], colors.textMuted[2]);
     doc.setFont("helvetica", "normal");
     const footerY = doc.internal.pageSize.getHeight() - 10;
     doc.text("Lumio Consórcios - Credenciado ao Itaú | www.lumioconsorcios.com.br", pageWidth / 2, footerY, { align: "center" });
