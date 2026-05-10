@@ -224,3 +224,19 @@
 .login-footer a:hover {
   text-decoration: underline;
 }
+
+.forgot-password {
+  text-align: right;
+  margin-top: -8px;
+  margin-bottom: 8px;
+}
+
+.forgot-password a {
+  font-size: 13px;
+  color: #00A884;
+  cursor: pointer;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
