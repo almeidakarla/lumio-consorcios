@@ -4,7 +4,7 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import "./crm.css";
-import { useLeads } from "./hooks/useLeads";
+import { useSupabaseLeads } from "./hooks/useSupabaseLeads";
 import { Lead, FUNNEL_STAGES } from "./types/lead";
 import { StatsBar } from "./components/StatsBar";
 import { TableView } from "./components/TableView";
@@ -17,7 +17,19 @@ import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 type ViewMode = "table" | "kanban";
 
 export default function CRMPage() {
-  const { leads, isLoaded, addLead, updateLead, deleteLead, moveLead, importLeads } = useLeads();
+  const {
+    leads,
+    isLoaded,
+    addLead,
+    updateLead,
+    deleteLead,
+    moveLead,
+    importLeads,
+    error,
+    pendingMigration,
+    migrateFromLocalStorage,
+    dismissMigration,
+  } = useSupabaseLeads();
   const [view, setView] = useState<ViewMode>("table");
   const [formOpen, setFormOpen] = useState(false);
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
@@ -28,6 +40,7 @@ export default function CRMPage() {
   const [toast, setToast] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [checkingAuth, setCheckingAuth] = useState(true);
+  const [isMigrating, setIsMigrating] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const supabase = createClient();
@@ -139,6 +152,22 @@ export default function CRMPage() {
     showToast("10 leads de teste criados!");
   };
 
+  const handleMigration = async () => {
+    setIsMigrating(true);
+    const success = await migrateFromLocalStorage();
+    setIsMigrating(false);
+    if (success) {
+      showToast("Leads migrados com sucesso!");
+    } else {
+      showToast("Erro ao migrar leads");
+    }
+  };
+
+  const handleDismissMigration = () => {
+    dismissMigration();
+    showToast("Migracao ignorada");
+  };
+
   if (checkingAuth || !isLoaded) {
     return (
       <div className="crm-loading">
@@ -152,6 +181,37 @@ export default function CRMPage() {
     <div className="crm-container">
       {/* Toast notification */}
       {toast && <div className="crm-toast">{toast}</div>}
+
+      {/* Error notification */}
+      {error && <div className="crm-toast crm-toast-error">{error}</div>}
+
+      {/* Migration banner */}
+      {pendingMigration && pendingMigration.length > 0 && (
+        <div className="crm-migration-banner">
+          <div className="crm-migration-content">
+            <span>
+              Encontramos {pendingMigration.length} leads salvos localmente.
+              Deseja importa-los para sua conta?
+            </span>
+            <div className="crm-migration-actions">
+              <button
+                onClick={handleMigration}
+                className="crm-btn-primary"
+                disabled={isMigrating}
+              >
+                {isMigrating ? "Migrando..." : "Importar"}
+              </button>
+              <button
+                onClick={handleDismissMigration}
+                className="crm-btn-outline"
+                disabled={isMigrating}
+              >
+                Ignorar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Header */}
       <header className="crm-header">
@@ -185,9 +245,18 @@ export default function CRMPage() {
             + Novo Lead
           </button>
           {isSupabaseConfigured && (
-            <button onClick={handleLogout} className="crm-btn-outline crm-btn-logout" title={userEmail || "Sair"}>
-              Sair
-            </button>
+            <>
+              <button
+                onClick={() => router.push("/account")}
+                className="crm-btn-outline"
+                title="Minha Conta"
+              >
+                Conta
+              </button>
+              <button onClick={handleLogout} className="crm-btn-outline crm-btn-logout" title={userEmail || "Sair"}>
+                Sair
+              </button>
+            </>
           )}
         </div>
       </header>
@@ -201,7 +270,10 @@ export default function CRMPage() {
         <button onClick={() => exportLeadsCSV(leads)} className="crm-btn-outline">Exportar</button>
         <button onClick={() => fileRef.current?.click()} className="crm-btn-outline">Importar</button>
         {isSupabaseConfigured && (
-          <button onClick={handleLogout} className="crm-btn-outline">Sair</button>
+          <>
+            <button onClick={() => router.push("/account")} className="crm-btn-outline">Conta</button>
+            <button onClick={handleLogout} className="crm-btn-outline">Sair</button>
+          </>
         )}
       </div>
 

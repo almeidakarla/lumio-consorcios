@@ -40,11 +40,11 @@ export async function updateSession(request: NextRequest) {
   // Refresh session if expired
   const { data: { user } } = await supabase.auth.getUser();
 
-  // Protect CRM routes
+  // Protect CRM and Account routes
   const pathname = request.nextUrl.pathname;
-  const isCrmRoute = pathname.startsWith("/crm");
+  const isProtectedRoute = pathname.startsWith("/crm") || pathname.startsWith("/account");
 
-  if (isCrmRoute && !user) {
+  if (isProtectedRoute && !user) {
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
   }

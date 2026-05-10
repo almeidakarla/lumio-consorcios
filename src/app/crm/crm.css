@@ -972,4 +972,52 @@
         border-radius: 16px;
         padding: 60px 20px;
     }
+
+    .crm-migration-banner {
+        flex-direction: column;
+        padding: 16px;
+        margin: 12px;
+        top: 72px;
+    }
+
+    .crm-migration-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+}
+
+/* Error Toast */
+.crm-toast-error {
+    background: #ef4444;
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
+}
+
+/* Migration Banner */
+.crm-migration-banner {
+    position: sticky;
+    top: 144px;
+    background: rgba(74, 155, 143, 0.1);
+    border-bottom: 1px solid var(--primary);
+    padding: 16px 24px;
+    z-index: 99;
+}
+
+.crm-migration-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.crm-migration-content span {
+    color: var(--text);
+    font-size: 14px;
+}
+
+.crm-migration-actions {
+    display: flex;
+    gap: 10px;
 }
