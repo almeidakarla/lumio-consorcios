@@ -13,7 +13,6 @@ import { LeadFormDialog } from "./components/LeadFormDialog";
 import { exportLeadsCSV, parseFile, downloadCSVTemplate, downloadExcelTemplate } from "./lib/csv";
 import { generateSeedLeads } from "./lib/seedLeads";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
-import { ThemeToggle } from "./components/ThemeToggle";
 
 type ViewMode = "table" | "kanban";
 
@@ -247,7 +246,6 @@ export default function CRMPage() {
             Importar
           </button>
           <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls,.xlsm,.xlsb,.ods,.numbers" className="crm-hidden" onChange={handleImport} />
-          <ThemeToggle />
           <button
             onClick={() => {
               setEditingLead(null);
