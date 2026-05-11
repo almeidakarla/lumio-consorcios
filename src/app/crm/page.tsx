@@ -138,8 +138,12 @@ export default function CRMPage() {
         showToast("Nenhum lead encontrado no arquivo");
         return;
       }
-      importLeads(parsed);
-      showToast(`${parsed.length} leads importados`);
+      const success = await importLeads(parsed);
+      if (success) {
+        showToast(`${parsed.length} leads importados`);
+      } else {
+        showToast("Erro ao importar leads. Verifique sua conexão.");
+      }
     } catch (error) {
       showToast(error instanceof Error ? error.message : "Erro ao importar arquivo");
     } finally {

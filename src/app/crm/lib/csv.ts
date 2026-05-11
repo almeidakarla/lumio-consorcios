@@ -58,30 +58,54 @@ export function parseCSV(content: string): Lead[] {
   const lines = content.split(/\r?\n/).filter((line) => line.trim());
   if (lines.length < 2) return [];
 
+  // Parse header row to create column mapping
+  const headers = parseCSVLine(lines[0]).map((h) => h.toLowerCase().trim());
   const leads: Lead[] = [];
+
+  // Helper to get value by column name variants
+  const getValue = (values: string[], ...keys: string[]): string => {
+    for (const key of keys) {
+      const idx = headers.findIndex((h) => h === key || h.includes(key));
+      if (idx !== -1 && values[idx]) return values[idx];
+    }
+    return "";
+  };
 
   for (let i = 1; i < lines.length; i++) {
     const values = parseCSVLine(lines[i]);
-    if (values.length < 11) continue;
+    if (values.length === 0) continue;
 
-    const [name, phone, email, type, broker, origin, interest, value, city, neighborhood, funnelStage] = values;
+    // Flexible column matching (like HubSpot)
+    const name = getValue(values, "nome", "name", "cliente", "lead");
+    if (!name) continue; // Only name is required
+
+    const phone = getValue(values, "telefone", "phone", "tel", "celular", "whatsapp");
+    const email = getValue(values, "e-mail", "email", "mail");
+    const type = getValue(values, "tipo", "type", "categoria");
+    const broker = getValue(values, "corretor responsável", "corretor responsavel", "corretor", "broker", "responsável");
+    const origin = getValue(values, "origem", "origin", "fonte", "source");
+    const interest = getValue(values, "interesse", "interest", "produto", "servico");
+    const value = getValue(values, "valor", "value", "valor aluguel", "aluguel", "renda");
+    const city = getValue(values, "cidade", "city", "municipio");
+    const neighborhood = getValue(values, "bairros", "bairro", "neighborhood", "região");
+    const funnelStage = getValue(values, "etapa do funil", "etapa", "stage", "funil", "status");
 
     const validType = LEAD_TYPES.includes(type as LeadType) ? type as LeadType : "Lead";
     const validStage = FUNNEL_STAGES.includes(funnelStage as FunnelStage) ? funnelStage as FunnelStage : "Novo Lead";
 
     leads.push({
-      id: Date.now().toString(36) + Math.random().toString(36).substr(2),
+      id: Date.now().toString(36) + Math.random().toString(36).substr(2) + i,
       createdAt: new Date().toISOString(),
-      name: name || "Sem nome",
-      phone: phone || "",
-      email: email || "",
+      name,
+      phone,
+      email,
       type: validType,
-      broker: broker || "",
-      origin: origin || "",
-      interest: interest || "",
+      broker,
+      origin,
+      interest,
       value: value ? parseFloat(value.replace(/[^\d.,]/g, "").replace(",", ".")) : undefined,
-      city: city || "",
-      neighborhood: neighborhood || "",
+      city,
+      neighborhood,
       funnelStage: validStage,
     });
   }
