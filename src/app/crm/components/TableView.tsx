@@ -85,7 +85,7 @@ export function TableView({ leads, onEditLead, onDeleteLead, sortField, sortDir,
     return (
       <div className="crm-empty-state">
         <p>Nenhum lead encontrado</p>
-        <p className="crm-empty-hint">Adicione um novo lead ou importe dados via CSV</p>
+        <p className="crm-empty-hint">Adicione um novo lead ou importe dados via Excel/CSV</p>
       </div>
     );
   }

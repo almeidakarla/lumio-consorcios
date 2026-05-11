@@ -10,7 +10,7 @@ import { StatsBar } from "./components/StatsBar";
 import { TableView } from "./components/TableView";
 import { KanbanView } from "./components/KanbanView";
 import { LeadFormDialog } from "./components/LeadFormDialog";
-import { exportLeadsCSV, parseFile, downloadCSVTemplate } from "./lib/csv";
+import { exportLeadsCSV, parseFile, downloadCSVTemplate, downloadExcelTemplate } from "./lib/csv";
 import { generateSeedLeads } from "./lib/seedLeads";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
@@ -225,8 +225,8 @@ export default function CRMPage() {
               Dados Teste
             </button>
           )}
-          <button onClick={downloadCSVTemplate} className="crm-btn-outline crm-hide-mobile">
-            Modelo CSV
+          <button onClick={downloadExcelTemplate} className="crm-btn-outline crm-hide-mobile">
+            Modelo Excel
           </button>
           <button onClick={() => exportLeadsCSV(leads)} className="crm-btn-outline crm-hide-mobile">
             Exportar
@@ -266,7 +266,7 @@ export default function CRMPage() {
         {leads.length === 0 && (
           <button onClick={handleSeedData} className="crm-btn-outline">Dados Teste</button>
         )}
-        <button onClick={downloadCSVTemplate} className="crm-btn-outline">CSV</button>
+        <button onClick={downloadExcelTemplate} className="crm-btn-outline">Modelo</button>
         <button onClick={() => exportLeadsCSV(leads)} className="crm-btn-outline">Exportar</button>
         <button onClick={() => fileRef.current?.click()} className="crm-btn-outline">Importar</button>
         {isSupabaseConfigured && (

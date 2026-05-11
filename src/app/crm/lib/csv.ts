@@ -124,8 +124,8 @@ function parseCSVLine(line: string): string[] {
 export function downloadCSVTemplate(): void {
   const templateRows = [
     CSV_HEADERS.join(","),
-    "João Silva,joao@email.com,(11) 99999-9999,Lead,Consórcio Imobiliário,Interessado em carta de 200k,2500,São Paulo,Centro,Novo Lead",
-    "Maria Santos,maria@email.com,(11) 98888-8888,Locatário,Consórcio Veículos,Quer financiar carro,1800,Campinas,Cambuí,Em Prospecção IA",
+    "João Silva,joao@email.com,(11) 99999-9999,Lead,Consórcio,Interessado em carta de 200k,2500,São Paulo,Centro,Novo Lead",
+    "Maria Santos,maria@email.com,(11) 98888-8888,Locatário,Consórcio,Quer financiar carro,1800,Campinas,Cambuí,Em Prospecção IA",
   ];
 
   const csvContent = templateRows.join("\n");
@@ -136,6 +136,35 @@ export function downloadCSVTemplate(): void {
   link.download = "modelo_importacao_leads.csv";
   link.click();
   URL.revokeObjectURL(url);
+}
+
+export function downloadExcelTemplate(): void {
+  const templateData = [
+    CSV_HEADERS,
+    ["João Silva", "joao@email.com", "(11) 99999-9999", "Lead", "Consórcio", "Interessado em carta de 200k", 2500, "São Paulo", "Centro", "Novo Lead"],
+    ["Maria Santos", "maria@email.com", "(11) 98888-8888", "Locatário", "Consórcio", "Quer financiar carro", 1800, "Campinas", "Cambuí", "Em Prospecção IA"],
+  ];
+
+  const worksheet = XLSX.utils.aoa_to_sheet(templateData);
+
+  // Set column widths
+  worksheet["!cols"] = [
+    { wch: 20 }, // Nome
+    { wch: 25 }, // E-mail
+    { wch: 18 }, // Telefone
+    { wch: 12 }, // Tipo
+    { wch: 15 }, // Interesse
+    { wch: 30 }, // Observações
+    { wch: 14 }, // Valor Aluguel
+    { wch: 15 }, // Cidade
+    { wch: 15 }, // Bairro
+    { wch: 18 }, // Etapa do Funil
+  ];
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Leads");
+
+  XLSX.writeFile(workbook, "modelo_importacao_leads.xlsx");
 }
 
 // Excel parsing
