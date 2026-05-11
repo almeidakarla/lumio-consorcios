@@ -567,11 +567,22 @@
 }
 
 .crm-kanban-header {
-    padding: 20px;
+    padding: 16px 20px;
     border-bottom: 1px solid var(--border);
+}
+
+.crm-kanban-header-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.crm-kanban-total {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-top: 4px;
 }
 
 .crm-kanban-title {
@@ -621,16 +632,17 @@
 
 .crm-kanban-card-header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .crm-kanban-card-name {
     font-size: 14px;
     font-weight: 600;
     color: var(--text);
+    line-height: 1.3;
 }
 
 .crm-kanban-card-type {
@@ -642,14 +654,55 @@
     font-weight: 600;
 }
 
+.crm-kanban-card-actions-inline {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.crm-btn-icon-small {
+    padding: 4px;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    color: var(--text-muted);
+}
+
+.crm-btn-icon-small:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.crm-btn-icon-small.crm-btn-danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+[data-theme="light"] .crm-btn-icon-small:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
 .crm-kanban-card-info {
     font-size: 13px;
     color: var(--text-muted);
-    line-height: 1.6;
+    line-height: 1.5;
 }
 
 .crm-kanban-card-info p {
-    margin-bottom: 2px;
+    margin-bottom: 4px;
+}
+
+.crm-kanban-card-phone {
+    color: var(--text-secondary);
+}
+
+.crm-kanban-card-interest {
+    color: var(--text-muted);
+}
+
+.crm-kanban-card-value {
+    color: var(--primary);
+    font-weight: 600;
+    margin-top: 6px;
 }
 
 .crm-kanban-card-actions {
@@ -1077,4 +1130,46 @@
 
 [data-theme="light"] .crm-theme-toggle {
     background: var(--bg-card);
+}
+
+/* Checkbox */
+.crm-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--primary);
+}
+
+/* Bulk Actions Bar */
+.crm-bulk-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: rgba(239, 68, 68, 0.1);
+    border-bottom: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.crm-bulk-count {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.crm-btn-danger-solid {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #ef4444;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.crm-btn-danger-solid:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
 }

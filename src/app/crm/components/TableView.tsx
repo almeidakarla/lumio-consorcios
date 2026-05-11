@@ -7,12 +7,14 @@ interface TableViewProps {
   leads: Lead[];
   onEditLead: (lead: Lead) => void;
   onDeleteLead: (id: string) => void;
+  onBulkDelete: (ids: string[]) => void;
   sortField: string;
   sortDir: "asc" | "desc";
   onSort: (field: string) => void;
 }
 
 const COLUMNS = [
+  { key: "select", label: "", sortable: false, minWidth: 40, defaultWidth: 40 },
   { key: "createdAt", label: "Data", sortable: true, minWidth: 80, defaultWidth: 100 },
   { key: "name", label: "Nome", sortable: true, minWidth: 120, defaultWidth: 180 },
   { key: "phone", label: "Telefone", sortable: false, minWidth: 100, defaultWidth: 130, hideClass: "crm-hide-mobile" },
@@ -38,7 +40,7 @@ function SortIcon({ field, sortField, sortDir }: { field: string; sortField: str
   return <span className="crm-sort-icon active">{sortDir === "asc" ? "↑" : "↓"}</span>;
 }
 
-export function TableView({ leads, onEditLead, onDeleteLead, sortField, sortDir, onSort }: TableViewProps) {
+export function TableView({ leads, onEditLead, onDeleteLead, onBulkDelete, sortField, sortDir, onSort }: TableViewProps) {
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>(() => {
     const widths: Record<string, number> = {};
     COLUMNS.forEach((col) => {
@@ -46,8 +48,40 @@ export function TableView({ leads, onEditLead, onDeleteLead, sortField, sortDir,
     });
     return widths;
   });
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   const resizingRef = useRef<{ key: string; startX: number; startWidth: number } | null>(null);
+
+  const allSelected = leads.length > 0 && selectedIds.size === leads.length;
+  const someSelected = selectedIds.size > 0 && selectedIds.size < leads.length;
+
+  const toggleSelectAll = () => {
+    if (allSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(leads.map((l) => l.id)));
+    }
+  };
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const handleBulkDelete = () => {
+    if (selectedIds.size === 0) return;
+    if (confirm(`Tem certeza que deseja excluir ${selectedIds.size} lead(s)?`)) {
+      onBulkDelete(Array.from(selectedIds));
+      setSelectedIds(new Set());
+    }
+  };
 
   const handleMouseDown = useCallback((e: React.MouseEvent, columnKey: string) => {
     e.preventDefault();
@@ -92,6 +126,16 @@ export function TableView({ leads, onEditLead, onDeleteLead, sortField, sortDir,
 
   const renderCell = (lead: Lead, columnKey: string) => {
     switch (columnKey) {
+      case "select":
+        return (
+          <input
+            type="checkbox"
+            className="crm-checkbox"
+            checked={selectedIds.has(lead.id)}
+            onChange={() => toggleSelect(lead.id)}
+            onClick={(e) => e.stopPropagation()}
+          />
+        );
       case "createdAt":
         return formatDate(lead.createdAt);
       case "name":
@@ -137,6 +181,17 @@ export function TableView({ leads, onEditLead, onDeleteLead, sortField, sortDir,
 
   return (
     <div className="crm-table-container">
+      {selectedIds.size > 0 && (
+        <div className="crm-bulk-actions">
+          <span className="crm-bulk-count">{selectedIds.size} selecionado(s)</span>
+          <button onClick={handleBulkDelete} className="crm-btn-danger-solid">
+            Excluir Selecionados
+          </button>
+          <button onClick={() => setSelectedIds(new Set())} className="crm-btn-outline">
+            Cancelar
+          </button>
+        </div>
+      )}
       <table className="crm-table">
         <thead>
           <tr>
@@ -147,19 +202,31 @@ export function TableView({ leads, onEditLead, onDeleteLead, sortField, sortDir,
                 style={{ width: columnWidths[col.key], minWidth: col.minWidth }}
                 onClick={col.sortable ? () => onSort(col.key) : undefined}
               >
-                <div className="crm-th-content">
-                  <span>
-                    {col.label}
-                    {col.sortable && <SortIcon field={col.key} sortField={sortField} sortDir={sortDir} />}
-                  </span>
-                  {col.key !== "actions" && (
-                    <div
-                      className="crm-resize-handle"
-                      onMouseDown={(e) => handleMouseDown(e, col.key)}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  )}
-                </div>
+                {col.key === "select" ? (
+                  <input
+                    type="checkbox"
+                    className="crm-checkbox"
+                    checked={allSelected}
+                    ref={(el) => {
+                      if (el) el.indeterminate = someSelected;
+                    }}
+                    onChange={toggleSelectAll}
+                  />
+                ) : (
+                  <div className="crm-th-content">
+                    <span>
+                      {col.label}
+                      {col.sortable && <SortIcon field={col.key} sortField={sortField} sortDir={sortDir} />}
+                    </span>
+                    {col.key !== "actions" && col.key !== "select" && (
+                      <div
+                        className="crm-resize-handle"
+                        onMouseDown={(e) => handleMouseDown(e, col.key)}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    )}
+                  </div>
+                )}
               </th>
             ))}
           </tr>

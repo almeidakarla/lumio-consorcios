@@ -59,11 +59,17 @@ export function KanbanView({ leads, onMoveLead, onEditLead, onDeleteLead }: Kanb
     setDraggedId(id);
   };
 
+  const formatCurrency = (value?: number) => {
+    if (!value) return null;
+    return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  };
+
   return (
     <div className="crm-kanban-wrapper" ref={scrollRef}>
       <div className="crm-kanban-board">
         {FUNNEL_STAGES.map((stage) => {
           const stageLeads = leads.filter((l) => l.funnelStage === stage);
+          const stageTotal = stageLeads.reduce((sum, l) => sum + (l.value || 0), 0);
           const isOver = dragOverStage === stage;
 
           return (
@@ -74,9 +80,14 @@ export function KanbanView({ leads, onMoveLead, onEditLead, onDeleteLead }: Kanb
               onDragLeave={handleDragLeave}
               onDrop={(e) => handleDrop(e, stage)}
             >
-              <div className="crm-kanban-header" style={{ borderColor: STAGE_COLORS[stage] }}>
-                <span className="crm-kanban-title">{stage}</span>
-                <span className="crm-kanban-count">{stageLeads.length}</span>
+              <div className="crm-kanban-header">
+                <div className="crm-kanban-header-top">
+                  <span className="crm-kanban-title">{stage}</span>
+                  <span className="crm-kanban-count">{stageLeads.length}</span>
+                </div>
+                {stageTotal > 0 && (
+                  <span className="crm-kanban-total">{formatCurrency(stageTotal)}</span>
+                )}
               </div>
               <div className="crm-kanban-cards">
                 {stageLeads.map((lead) => (
@@ -89,24 +100,21 @@ export function KanbanView({ leads, onMoveLead, onEditLead, onDeleteLead }: Kanb
                   >
                     <div className="crm-kanban-card-header">
                       <span className="crm-kanban-card-name">{lead.name}</span>
-                      <span className="crm-kanban-card-type">{lead.type}</span>
+                      <div className="crm-kanban-card-actions-inline">
+                        <button onClick={() => onEditLead(lead)} className="crm-btn-icon-small" title="Editar">
+                          ✏️
+                        </button>
+                        <button onClick={() => onDeleteLead(lead.id)} className="crm-btn-icon-small crm-btn-danger" title="Excluir">
+                          🗑️
+                        </button>
+                      </div>
                     </div>
                     <div className="crm-kanban-card-info">
-                      {lead.interest && <p className="crm-kanban-card-interest">{lead.interest}</p>}
                       {lead.phone && <p className="crm-kanban-card-phone">{lead.phone}</p>}
-                      {lead.city && (
-                        <p className="crm-kanban-card-location">
-                          {lead.city}{lead.neighborhood ? `, ${lead.neighborhood}` : ""}
-                        </p>
+                      {lead.interest && <p className="crm-kanban-card-interest">{lead.interest}</p>}
+                      {lead.value && (
+                        <p className="crm-kanban-card-value">Crédito: {formatCurrency(lead.value)}</p>
                       )}
-                    </div>
-                    <div className="crm-kanban-card-actions">
-                      <button onClick={() => onEditLead(lead)} className="crm-btn-small">
-                        Editar
-                      </button>
-                      <button onClick={() => onDeleteLead(lead.id)} className="crm-btn-small crm-btn-danger">
-                        Excluir
-                      </button>
                     </div>
                     {/* Mobile stage selector */}
                     <select

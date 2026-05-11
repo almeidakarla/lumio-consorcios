@@ -129,6 +129,13 @@ export default function CRMPage() {
     }
   };
 
+  const handleBulkDelete = async (ids: string[]) => {
+    for (const id of ids) {
+      await deleteLead(id);
+    }
+    showToast(`${ids.length} lead(s) excluído(s)`);
+  };
+
   const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -332,6 +339,7 @@ export default function CRMPage() {
             leads={filtered}
             onEditLead={handleEdit}
             onDeleteLead={handleDelete}
+            onBulkDelete={handleBulkDelete}
             sortField={sortField}
             sortDir={sortDir}
             onSort={handleSort}
