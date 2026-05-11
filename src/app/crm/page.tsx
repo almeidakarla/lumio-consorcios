@@ -100,7 +100,7 @@ export default function CRMPage() {
       let cmp = 0;
       if (sortField === "createdAt") cmp = a.createdAt.localeCompare(b.createdAt);
       else if (sortField === "name") cmp = a.name.localeCompare(b.name);
-      else if (sortField === "rentValue") cmp = (a.rentValue ?? 0) - (b.rentValue ?? 0);
+      else if (sortField === "value") cmp = (a.value ?? 0) - (b.value ?? 0);
       return sortDir === "asc" ? cmp : -cmp;
     });
 

@@ -13,12 +13,13 @@ interface LeadFormDialogProps {
 
 const EMPTY_FORM: LeadFormData = {
   name: "",
-  email: "",
   phone: "",
+  email: "",
   type: "Lead",
+  broker: "",
+  origin: "",
   interest: "",
-  notes: "",
-  rentValue: undefined,
+  value: undefined,
   city: "",
   neighborhood: "",
   funnelStage: "Novo Lead",
@@ -31,12 +32,13 @@ export function LeadFormDialog({ open, onOpenChange, lead, onSave, onUpdate }: L
     if (lead) {
       setForm({
         name: lead.name,
-        email: lead.email,
         phone: lead.phone,
+        email: lead.email,
         type: lead.type,
+        broker: lead.broker,
+        origin: lead.origin,
         interest: lead.interest,
-        notes: lead.notes,
-        rentValue: lead.rentValue,
+        value: lead.value,
         city: lead.city,
         neighborhood: lead.neighborhood,
         funnelStage: lead.funnelStage,
@@ -86,22 +88,22 @@ export function LeadFormDialog({ open, onOpenChange, lead, onSave, onUpdate }: L
             </div>
 
             <div className="crm-form-group">
-              <label>E-mail</label>
-              <input
-                type="email"
-                value={form.email}
-                onChange={(e) => handleChange("email", e.target.value)}
-                placeholder="email@exemplo.com"
-              />
-            </div>
-
-            <div className="crm-form-group">
               <label>Telefone</label>
               <input
                 type="tel"
                 value={form.phone}
                 onChange={(e) => handleChange("phone", e.target.value)}
                 placeholder="(11) 99999-9999"
+              />
+            </div>
+
+            <div className="crm-form-group">
+              <label>E-mail</label>
+              <input
+                type="email"
+                value={form.email}
+                onChange={(e) => handleChange("email", e.target.value)}
+                placeholder="email@exemplo.com"
               />
             </div>
 
@@ -115,35 +117,44 @@ export function LeadFormDialog({ open, onOpenChange, lead, onSave, onUpdate }: L
             </div>
 
             <div className="crm-form-group">
-              <label>Etapa do Funil</label>
-              <select value={form.funnelStage} onChange={(e) => handleChange("funnelStage", e.target.value as FunnelStage)}>
-                {FUNNEL_STAGES.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
+              <label>Corretor Responsável</label>
+              <input
+                type="text"
+                value={form.broker}
+                onChange={(e) => handleChange("broker", e.target.value)}
+                placeholder="Nome do corretor"
+              />
             </div>
 
-            <div className="crm-form-group crm-form-full">
+            <div className="crm-form-group">
+              <label>Origem</label>
+              <input
+                type="text"
+                value={form.origin}
+                onChange={(e) => handleChange("origin", e.target.value)}
+                placeholder="Ex: Site, Indicação, Instagram"
+              />
+            </div>
+
+            <div className="crm-form-group">
               <label>Interesse</label>
               <input
                 type="text"
                 value={form.interest}
                 onChange={(e) => handleChange("interest", e.target.value)}
-                placeholder="Ex: Consórcio Imobiliário - Carta 200k"
+                placeholder="Ex: Consórcio Imobiliário"
               />
             </div>
 
-            {form.type === "Locatário" && (
-              <div className="crm-form-group">
-                <label>Valor do Aluguel (R$)</label>
-                <input
-                  type="number"
-                  value={form.rentValue ?? ""}
-                  onChange={(e) => handleChange("rentValue", e.target.value ? parseFloat(e.target.value) : undefined)}
-                  placeholder="2500"
-                />
-              </div>
-            )}
+            <div className="crm-form-group">
+              <label>Valor (R$)</label>
+              <input
+                type="number"
+                value={form.value ?? ""}
+                onChange={(e) => handleChange("value", e.target.value ? parseFloat(e.target.value) : undefined)}
+                placeholder="250000"
+              />
+            </div>
 
             <div className="crm-form-group">
               <label>Cidade</label>
@@ -165,14 +176,13 @@ export function LeadFormDialog({ open, onOpenChange, lead, onSave, onUpdate }: L
               />
             </div>
 
-            <div className="crm-form-group crm-form-full">
-              <label>Observações</label>
-              <textarea
-                value={form.notes}
-                onChange={(e) => handleChange("notes", e.target.value)}
-                placeholder="Notas adicionais sobre o lead..."
-                rows={3}
-              />
+            <div className="crm-form-group">
+              <label>Etapa do Funil</label>
+              <select value={form.funnelStage} onChange={(e) => handleChange("funnelStage", e.target.value as FunnelStage)}>
+                {FUNNEL_STAGES.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
             </div>
           </div>
 

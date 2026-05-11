@@ -15,11 +15,11 @@ interface TableViewProps {
 const COLUMNS = [
   { key: "createdAt", label: "Data", sortable: true, minWidth: 80, defaultWidth: 100 },
   { key: "name", label: "Nome", sortable: true, minWidth: 120, defaultWidth: 180 },
-  { key: "email", label: "E-mail", sortable: false, minWidth: 120, defaultWidth: 180, hideClass: "crm-hide-mobile" },
   { key: "phone", label: "Telefone", sortable: false, minWidth: 100, defaultWidth: 130, hideClass: "crm-hide-mobile" },
   { key: "type", label: "Tipo", sortable: false, minWidth: 80, defaultWidth: 100, hideClass: "crm-hide-tablet" },
-  { key: "rentValue", label: "Aluguel", sortable: true, minWidth: 90, defaultWidth: 110, hideClass: "crm-hide-tablet" },
-  { key: "city", label: "Cidade", sortable: false, minWidth: 80, defaultWidth: 120, hideClass: "crm-hide-tablet" },
+  { key: "broker", label: "Corretor", sortable: false, minWidth: 100, defaultWidth: 130, hideClass: "crm-hide-tablet" },
+  { key: "origin", label: "Origem", sortable: false, minWidth: 80, defaultWidth: 100, hideClass: "crm-hide-tablet" },
+  { key: "value", label: "Valor", sortable: true, minWidth: 90, defaultWidth: 110, hideClass: "crm-hide-mobile" },
   { key: "funnelStage", label: "Etapa", sortable: false, minWidth: 100, defaultWidth: 140 },
   { key: "actions", label: "Ações", sortable: false, minWidth: 80, defaultWidth: 90 },
 ];
@@ -107,10 +107,12 @@ export function TableView({ leads, onEditLead, onDeleteLead, sortField, sortDir,
         return lead.phone || "-";
       case "type":
         return <span className="crm-badge crm-badge-type">{lead.type}</span>;
-      case "rentValue":
-        return formatCurrency(lead.rentValue);
-      case "city":
-        return lead.city || "-";
+      case "broker":
+        return lead.broker || "-";
+      case "origin":
+        return lead.origin || "-";
+      case "value":
+        return formatCurrency(lead.value);
       case "funnelStage":
         return (
           <span className={`crm-badge crm-badge-stage crm-stage-${getStageClass(lead.funnelStage)}`}>

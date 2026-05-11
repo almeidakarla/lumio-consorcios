@@ -8,12 +8,13 @@ export function dbLeadToLead(dbLead: DbLead): Lead {
     id: dbLead.id,
     createdAt: dbLead.created_at,
     name: dbLead.name,
-    email: dbLead.email || "",
     phone: dbLead.phone || "",
+    email: dbLead.email || "",
     type: dbLead.type as Lead["type"],
+    broker: dbLead.broker || "",
+    origin: dbLead.origin || "",
     interest: dbLead.interest || "",
-    notes: dbLead.notes || "",
-    rentValue: dbLead.rent_value ?? undefined,
+    value: dbLead.value ?? undefined,
     city: dbLead.city || "",
     neighborhood: dbLead.neighborhood || "",
     funnelStage: dbLead.funnel_stage as FunnelStage,
@@ -25,12 +26,13 @@ export function leadToDbInsert(lead: LeadFormData, userId: string): DbLeadInsert
   return {
     user_id: userId,
     name: lead.name,
-    email: lead.email || null,
     phone: lead.phone || null,
+    email: lead.email || null,
     type: lead.type,
+    broker: lead.broker || null,
+    origin: lead.origin || null,
     interest: lead.interest || null,
-    notes: lead.notes || null,
-    rent_value: lead.rentValue ?? null,
+    value: lead.value ?? null,
     city: lead.city || null,
     neighborhood: lead.neighborhood || null,
     funnel_stage: lead.funnelStage,
@@ -42,12 +44,13 @@ export function leadToDbUpdate(data: Partial<LeadFormData>): DbLeadUpdate {
   const update: DbLeadUpdate = {};
 
   if (data.name !== undefined) update.name = data.name;
-  if (data.email !== undefined) update.email = data.email || null;
   if (data.phone !== undefined) update.phone = data.phone || null;
+  if (data.email !== undefined) update.email = data.email || null;
   if (data.type !== undefined) update.type = data.type;
+  if (data.broker !== undefined) update.broker = data.broker || null;
+  if (data.origin !== undefined) update.origin = data.origin || null;
   if (data.interest !== undefined) update.interest = data.interest || null;
-  if (data.notes !== undefined) update.notes = data.notes || null;
-  if (data.rentValue !== undefined) update.rent_value = data.rentValue ?? null;
+  if (data.value !== undefined) update.value = data.value ?? null;
   if (data.city !== undefined) update.city = data.city || null;
   if (data.neighborhood !== undefined) update.neighborhood = data.neighborhood || null;
   if (data.funnelStage !== undefined) update.funnel_stage = data.funnelStage;
@@ -105,12 +108,13 @@ export class LeadsService {
     const inserts: DbLeadInsert[] = leads.map((lead) => ({
       user_id: userId,
       name: lead.name,
-      email: lead.email || null,
       phone: lead.phone || null,
+      email: lead.email || null,
       type: lead.type,
+      broker: lead.broker || null,
+      origin: lead.origin || null,
       interest: lead.interest || null,
-      notes: lead.notes || null,
-      rent_value: lead.rentValue ?? null,
+      value: lead.value ?? null,
       city: lead.city || null,
       neighborhood: lead.neighborhood || null,
       funnel_stage: lead.funnelStage,

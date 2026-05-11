@@ -15,6 +15,8 @@ const INTERESTS = [
   "Consórcio Caminhão",
   "Consórcio Imobiliário - Terreno",
 ];
+const BROKERS = ["Carlos Mendes", "Ana Lima", "Roberto Dias", "Fernanda Costa", ""];
+const ORIGINS = ["Site", "Indicação", "Instagram", "Facebook", "WhatsApp", "Google Ads", ""];
 
 function randomItem<T>(arr: readonly T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -44,9 +46,10 @@ export function generateSeedLeads(): Lead[] {
       email,
       phone: randomPhone(),
       type,
+      broker: randomItem(BROKERS),
+      origin: randomItem(ORIGINS),
       interest: randomItem(INTERESTS),
-      notes: i % 3 === 0 ? "Cliente prioritário" : i % 4 === 0 ? "Retornar ligação" : "",
-      rentValue: type === "Locatário" ? Math.floor(Math.random() * 3000 + 1000) : undefined,
+      value: Math.random() > 0.3 ? Math.floor(Math.random() * 500000 + 50000) : undefined,
       city: randomItem(CITIES),
       neighborhood: randomItem(NEIGHBORHOODS),
       funnelStage: randomItem(FUNNEL_STAGES),
