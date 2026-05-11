@@ -12,7 +12,9 @@
       "Bash(cd:*)",
       "Bash(npx tsc:*)",
       "Bash(npm install)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(node -e:*)",
+      "Bash(npm run dev:*)"
     ]
   }
 }

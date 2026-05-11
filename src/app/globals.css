@@ -8,6 +8,8 @@
     --primary:#00A884;
     --primary-dark:#007968;
     --primary-light:#00A884;
+    --font:'Plus Jakarta Sans',-apple-system,sans-serif;
+    /* Dark Mode (Default) */
     --bg:#0D1113;
     --bg-alt:#0D1113;
     --bg-card:#131719;
@@ -15,8 +17,19 @@
     --text-secondary:#d4d4d4;
     --text-muted:#687280;
     --border:#1f2428;
-    --border-light:#2a3038;
-    --font:'Plus Jakarta Sans',-apple-system,sans-serif
+    --border-light:#2a3038
+}
+
+/* Light Mode */
+[data-theme="light"]{
+    --bg:#f5f7fa;
+    --bg-alt:#ffffff;
+    --bg-card:#ffffff;
+    --text:#1a1a1a;
+    --text-secondary:#4a4a4a;
+    --text-muted:#6b7280;
+    --border:#e5e7eb;
+    --border-light:#d1d5db
 }
 
 html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--border-light) transparent}

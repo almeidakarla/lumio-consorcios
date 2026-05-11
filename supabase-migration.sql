@@ -24,9 +24,10 @@ CREATE TABLE IF NOT EXISTS leads (
   email TEXT,
   phone TEXT,
   type TEXT NOT NULL,
+  broker TEXT,
+  origin TEXT,
   interest TEXT,
-  notes TEXT,
-  rent_value NUMERIC,
+  value NUMERIC,
   city TEXT,
   neighborhood TEXT,
   funnel_stage TEXT NOT NULL
