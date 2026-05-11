@@ -5,7 +5,6 @@
     background: var(--bg);
     color: var(--text);
     font-family: var(--font);
-    padding-top: 72px; /* Account for fixed main site header */
 }
 
 .crm-hidden {
@@ -61,7 +60,7 @@
 /* Header */
 .crm-header {
     position: sticky;
-    top: 72px; /* Below fixed main site header */
+    top: 0;
     background: rgba(10, 10, 10, 0.9);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
@@ -977,7 +976,7 @@
         flex-direction: column;
         padding: 16px;
         margin: 12px;
-        top: 72px;
+        top: 56px;
     }
 
     .crm-migration-content {
@@ -996,7 +995,7 @@
 /* Migration Banner */
 .crm-migration-banner {
     position: sticky;
-    top: 144px;
+    top: 64px;
     background: rgba(74, 155, 143, 0.1);
     border-bottom: 1px solid var(--primary);
     padding: 16px 24px;

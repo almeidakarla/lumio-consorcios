@@ -9,6 +9,8 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
     pathname === "/" ||
     pathname?.startsWith("/crm") ||
     pathname?.startsWith("/login") ||
+    pathname?.startsWith("/account") ||
+    pathname?.startsWith("/reset-password") ||
     pathname?.startsWith("/simulador");
 
   if (isStandaloneRoute) {
