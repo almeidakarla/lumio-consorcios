@@ -18,18 +18,34 @@ export const LEAD_TYPES = [
   "Indicação",
 ] as const;
 
+export const INTERESSE_OPTIONS = [
+  "Apartamento",
+  "Casa",
+  "Cobertura",
+  "Terreno",
+  "Studio",
+  "Apartamento Garden",
+  "Chácara",
+  "Fazenda",
+  "Loja",
+  "Sítio",
+] as const;
+
+export type InteresseOption = (typeof INTERESSE_OPTIONS)[number];
+
 export type LeadType = (typeof LEAD_TYPES)[number];
 
 export interface Lead {
   id: string;
   createdAt: string;
   name: string;
-  email: string;
   phone: string;
+  email: string;
   type: LeadType;
+  broker: string;
+  origin: string;
   interest: string;
-  notes: string;
-  rentValue?: number;
+  value?: number;
   city: string;
   neighborhood: string;
   funnelStage: FunnelStage;

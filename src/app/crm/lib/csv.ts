@@ -1,16 +1,17 @@
 import * as XLSX from "xlsx";
-import { Lead, LeadFormData, FUNNEL_STAGES, LEAD_TYPES, FunnelStage, LeadType } from "../types/lead";
+import { Lead, FUNNEL_STAGES, LEAD_TYPES, INTERESSE_OPTIONS, FunnelStage, LeadType } from "../types/lead";
 
 const CSV_HEADERS = [
   "Nome",
-  "E-mail",
   "Telefone",
+  "Email",
   "Tipo",
+  "Corretor Responsável",
+  "Origem",
   "Interesse",
-  "Observações",
-  "Valor Aluguel",
+  "Valor",
   "Cidade",
-  "Bairro",
+  "Bairros",
   "Etapa do Funil",
 ];
 
@@ -29,12 +30,13 @@ export function exportLeadsCSV(leads: Lead[]): void {
   for (const lead of leads) {
     const row = [
       escapeCSV(lead.name),
-      escapeCSV(lead.email),
       escapeCSV(lead.phone),
+      escapeCSV(lead.email),
       escapeCSV(lead.type),
+      escapeCSV(lead.broker),
+      escapeCSV(lead.origin),
       escapeCSV(lead.interest),
-      escapeCSV(lead.notes),
-      escapeCSV(lead.rentValue ?? ""),
+      escapeCSV(lead.value ?? ""),
       escapeCSV(lead.city),
       escapeCSV(lead.neighborhood),
       escapeCSV(lead.funnelStage),
@@ -60,9 +62,9 @@ export function parseCSV(content: string): Lead[] {
 
   for (let i = 1; i < lines.length; i++) {
     const values = parseCSVLine(lines[i]);
-    if (values.length < 10) continue;
+    if (values.length < 11) continue;
 
-    const [name, email, phone, type, interest, notes, rentValue, city, neighborhood, funnelStage] = values;
+    const [name, phone, email, type, broker, origin, interest, value, city, neighborhood, funnelStage] = values;
 
     const validType = LEAD_TYPES.includes(type as LeadType) ? type as LeadType : "Lead";
     const validStage = FUNNEL_STAGES.includes(funnelStage as FunnelStage) ? funnelStage as FunnelStage : "Novo Lead";
@@ -71,12 +73,13 @@ export function parseCSV(content: string): Lead[] {
       id: Date.now().toString(36) + Math.random().toString(36).substr(2),
       createdAt: new Date().toISOString(),
       name: name || "Sem nome",
-      email: email || "",
       phone: phone || "",
+      email: email || "",
       type: validType,
+      broker: broker || "",
+      origin: origin || "",
       interest: interest || "",
-      notes: notes || "",
-      rentValue: rentValue ? parseFloat(rentValue.replace(/[^\d.,]/g, "").replace(",", ".")) : undefined,
+      value: value ? parseFloat(value.replace(/[^\d.,]/g, "").replace(",", ".")) : undefined,
       city: city || "",
       neighborhood: neighborhood || "",
       funnelStage: validStage,
@@ -122,13 +125,8 @@ function parseCSVLine(line: string): string[] {
 }
 
 export function downloadCSVTemplate(): void {
-  const templateRows = [
-    CSV_HEADERS.join(","),
-    "João Silva,joao@email.com,(11) 99999-9999,Lead,Consórcio,Interessado em carta de 200k,2500,São Paulo,Centro,Novo Lead",
-    "Maria Santos,maria@email.com,(11) 98888-8888,Locatário,Consórcio,Quer financiar carro,1800,Campinas,Cambuí,Em Prospecção IA",
-  ];
-
-  const csvContent = templateRows.join("\n");
+  // Create template with headers only (no example data)
+  const csvContent = CSV_HEADERS.join(",");
   const blob = new Blob(["\ufeff" + csvContent], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -139,30 +137,61 @@ export function downloadCSVTemplate(): void {
 }
 
 export function downloadExcelTemplate(): void {
-  const templateData = [
-    CSV_HEADERS,
-    ["João Silva", "joao@email.com", "(11) 99999-9999", "Lead", "Consórcio", "Interessado em carta de 200k", 2500, "São Paulo", "Centro", "Novo Lead"],
-    ["Maria Santos", "maria@email.com", "(11) 98888-8888", "Locatário", "Consórcio", "Quer financiar carro", 1800, "Campinas", "Cambuí", "Em Prospecção IA"],
-  ];
+  // Create template with headers only (no example data)
+  const templateData = [CSV_HEADERS];
 
   const worksheet = XLSX.utils.aoa_to_sheet(templateData);
 
   // Set column widths
   worksheet["!cols"] = [
     { wch: 20 }, // Nome
-    { wch: 25 }, // E-mail
     { wch: 18 }, // Telefone
+    { wch: 25 }, // Email
     { wch: 12 }, // Tipo
-    { wch: 15 }, // Interesse
-    { wch: 30 }, // Observações
-    { wch: 14 }, // Valor Aluguel
+    { wch: 20 }, // Corretor Responsável
+    { wch: 15 }, // Origem
+    { wch: 25 }, // Interesse
+    { wch: 12 }, // Valor
     { wch: 15 }, // Cidade
-    { wch: 15 }, // Bairro
-    { wch: 18 }, // Etapa do Funil
+    { wch: 15 }, // Bairros
+    { wch: 22 }, // Etapa do Funil
+  ];
+
+  // Create reference sheet with all valid dropdown options
+  const maxRows = Math.max(LEAD_TYPES.length, INTERESSE_OPTIONS.length, FUNNEL_STAGES.length);
+  const optionsData: (string | undefined)[][] = [
+    ["Tipo", "Interesse *", "Etapa do Funil"],
+  ];
+
+  for (let i = 0; i < maxRows; i++) {
+    optionsData.push([
+      LEAD_TYPES[i] || undefined,
+      INTERESSE_OPTIONS[i] || undefined,
+      FUNNEL_STAGES[i] || undefined,
+    ]);
+  }
+
+  // Add instruction row
+  optionsData.push([]);
+  optionsData.push(["* Para múltiplos interesses, separe com ponto e vírgula (;)"]);
+  optionsData.push(["  Exemplo: Apartamento; Casa; Terreno"]);
+
+  const optionsSheet = XLSX.utils.aoa_to_sheet(optionsData);
+  optionsSheet["!cols"] = [
+    { wch: 15 },
+    { wch: 20 },
+    { wch: 24 },
+  ];
+
+  // Merge the instruction cells
+  optionsSheet["!merges"] = [
+    { s: { r: maxRows + 2, c: 0 }, e: { r: maxRows + 2, c: 2 } },
+    { s: { r: maxRows + 3, c: 0 }, e: { r: maxRows + 3, c: 2 } },
   ];
 
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, "Leads");
+  XLSX.utils.book_append_sheet(workbook, optionsSheet, "Opções");
 
   XLSX.writeFile(workbook, "modelo_importacao_leads.xlsx");
 }
@@ -183,14 +212,15 @@ export function parseExcel(data: ArrayBuffer): Lead[] {
   for (const row of jsonData) {
     // Try to match column names (case-insensitive and flexible)
     const name = findValue(row, ["nome", "name", "cliente", "lead"]);
-    const email = findValue(row, ["e-mail", "email", "mail"]);
     const phone = findValue(row, ["telefone", "phone", "tel", "celular", "whatsapp"]);
+    const email = findValue(row, ["e-mail", "email", "mail"]);
     const type = findValue(row, ["tipo", "type", "categoria"]);
+    const broker = findValue(row, ["corretor responsável", "corretor responsavel", "corretor", "broker", "responsável", "responsavel"]);
+    const origin = findValue(row, ["origem", "origin", "fonte", "source"]);
     const interest = findValue(row, ["interesse", "interest", "produto", "servico", "serviço"]);
-    const notes = findValue(row, ["observações", "observacoes", "notes", "notas", "obs"]);
-    const rentValue = findValue(row, ["valor aluguel", "aluguel", "rent", "valor", "renda"]);
+    const value = findValue(row, ["valor", "value", "valor aluguel", "aluguel", "rent", "renda"]);
     const city = findValue(row, ["cidade", "city", "municipio", "município"]);
-    const neighborhood = findValue(row, ["bairro", "neighborhood", "região", "regiao"]);
+    const neighborhood = findValue(row, ["bairros", "bairro", "neighborhood", "região", "regiao"]);
     const funnelStage = findValue(row, ["etapa do funil", "etapa", "stage", "funil", "status"]);
 
     // Skip rows without a name
@@ -199,20 +229,21 @@ export function parseExcel(data: ArrayBuffer): Lead[] {
     const validType = LEAD_TYPES.includes(type as LeadType) ? type as LeadType : "Lead";
     const validStage = FUNNEL_STAGES.includes(funnelStage as FunnelStage) ? funnelStage as FunnelStage : "Novo Lead";
 
-    const rentValueNum = rentValue
-      ? parseFloat(String(rentValue).replace(/[^\d.,]/g, "").replace(",", "."))
+    const valueNum = value
+      ? parseFloat(String(value).replace(/[^\d.,]/g, "").replace(",", "."))
       : undefined;
 
     leads.push({
       id: Date.now().toString(36) + Math.random().toString(36).substr(2) + leads.length,
       createdAt: new Date().toISOString(),
       name: String(name),
-      email: String(email || ""),
       phone: String(phone || ""),
+      email: String(email || ""),
       type: validType,
+      broker: String(broker || ""),
+      origin: String(origin || ""),
       interest: String(interest || ""),
-      notes: String(notes || ""),
-      rentValue: rentValueNum && !isNaN(rentValueNum) ? rentValueNum : undefined,
+      value: valueNum && !isNaN(valueNum) ? valueNum : undefined,
       city: String(city || ""),
       neighborhood: String(neighborhood || ""),
       funnelStage: validStage,
